@@ -1,14 +1,15 @@
 import { Pool } from "pg";
+import { PGSQL_DB, PGSQL_HOST, PGSQL_PASS, PGSQL_PORT, PGSQL_USER } from "../env";
 
 let conn: Pool | null = null
 
 if (!conn) {
     conn = new Pool({
-        user: process.env.PGSQL_USER,
-        password: process.env.PGSQL_PASS,
-        host: process.env.PGSQL_HOST,
-        port: Number(process.env.PGSQL_PORT),
-        database: process.env.PGSQL_DB
+        user: PGSQL_USER,
+        password: PGSQL_PASS,
+        host: PGSQL_HOST,
+        port: Number(PGSQL_PORT),
+        database: PGSQL_DB
     })
 }
 

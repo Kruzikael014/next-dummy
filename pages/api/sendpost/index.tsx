@@ -8,7 +8,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const query = "INSERT INTO storage (message) VALUES ($1)";
       const values = [content];
       await conn?.query(query, values);
-      console.log("Message saved:", content);
       res.status(200).json({ message: "Message saved successfully" });
     } catch (error) {
       console.error("Error saving message:", error);

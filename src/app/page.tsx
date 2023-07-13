@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 
 export default function Home() {
   const [tick, setTick] = useState(0);
-  const [messages, setMessages] = useState([""]);
+  const [messages, setMessages] = useState<{ message: string }[]>([]);
   const [inputValue, setInputValue] = useState("");
 
   setTimeout(() => {
@@ -14,10 +14,13 @@ export default function Home() {
 
   useEffect(() => {
     const fetchMessages = async () => {
-      console.log("test");
-      const element = document.getElementById("hihiheha");
-      if (element) {
-        // element.innerHTML += "<p> test </p>";
+      try {
+        const response = await axios.get("api/getpost");
+        if (response != null) {
+          setMessages(response.data.result.rows);
+        }
+      } catch (error) {
+        console.log("error");
       }
     };
     fetchMessages();
@@ -25,13 +28,12 @@ export default function Home() {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(inputValue);
     let data = {
       content: inputValue,
     };
+    setInputValue("");
     try {
-      const response = await axios.post("api/sendpost", data);
-      if (response != null) alert(response);
+      await axios.post("api/sendpost", data);
     } catch (error) {
       console.log("failed to save message!");
     }
@@ -53,9 +55,17 @@ export default function Home() {
         </center>
       </form>
       <div
-        style={{ display: "flex", flexDirection: "column" }}
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr 1fr",
+          flexDirection: "column",
+        }}
         id="hihiheha"
-      ></div>
+      >
+        {messages.map((messageObj, idx) => {
+          return <div key={idx}>{messageObj?.message}</div>;
+        })}
+      </div>
     </div>
   );
 }
